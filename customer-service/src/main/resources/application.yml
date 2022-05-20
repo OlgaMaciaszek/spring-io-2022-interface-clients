@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: customer-service
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            verification-service:
+              - uri: http://localhost:9080
+server:
+  port: 9081
+logging:
+  level:
+    org.springframework: DEBUG

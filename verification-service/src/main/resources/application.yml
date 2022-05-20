@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: verification-service
+server:
+  port: 9080
+logging:
+  level:
+    org.springframework: DEBUG
