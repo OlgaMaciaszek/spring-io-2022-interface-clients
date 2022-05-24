@@ -1,14 +1,10 @@
 package io.spring.barcelona.customerservice;
 
-import java.util.Collections;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 /**
  * @author Olga Maciaszek-Sharma
@@ -32,7 +28,7 @@ public class CustomerRegistrationService {
 	CustomerApplicationResult register(CustomerApplication customerApplication) {
 //		CustomerVerificationResult verificationResult = verify(customerApplication);
 //		CustomerVerificationResult verificationResult = verificationServiceClient.verify(customerApplication);
-		CustomerVerificationResult verificationResult = verificationServiceOFClient.verify(customerApplication, MediaType.APPLICATION_JSON_VALUE);
+		CustomerVerificationResult verificationResult = verificationServiceOFClient.verify(customerApplication, "test");
 		if (CustomerVerificationResult.Status.APPROVED.equals(verificationResult.getStatus())) {
 			Customer customer = customerRepository.create(new Customer(customerApplication));
 			return new CustomerApplicationResult(customerApplication.getId(), customer.getId(), CustomerApplicationResult.Status.ACCEPTED);
@@ -41,12 +37,11 @@ public class CustomerRegistrationService {
 	}
 
 	private CustomerVerificationResult verify(CustomerApplication customerApplication) {
-		UriComponents uri = UriComponentsBuilder.newInstance().scheme("http")
-				.host("localhost:9080").path("/verify").build();
+		DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory("http://localhost:9080");
+		restTemplate.setUriTemplateHandler(factory);
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.set("X-Custom-Header", "test");
 		HttpEntity<CustomerApplication> request = new HttpEntity<>(customerApplication, headers);
-		return restTemplate.postForObject(uri.toString(), request, CustomerVerificationResult.class);
+		return restTemplate.postForObject("/verify", request, CustomerVerificationResult.class);
 	}
 }
