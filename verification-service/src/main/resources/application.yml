@@ -1,3 +1,12 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - env
+          - metrics
+          - prometheus
 spring:
   application:
     name: verification-service

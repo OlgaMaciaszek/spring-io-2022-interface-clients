@@ -1,13 +1,22 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - env
+          - metrics
+          - prometheus
 spring:
   application:
     name: customer-service
-  cloud:
-    discovery:
-      client:
-        simple:
-          instances:
-            verification-service:
-              - uri: http://localhost:9080
+#  cloud:
+#    discovery:
+#      client:
+#        simple:
+#          instances:
+#            verification-service:
+#              - uri: http://localhost:9080
 server:
   port: 9081
 logging:
