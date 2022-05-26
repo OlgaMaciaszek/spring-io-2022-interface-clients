@@ -28,11 +28,11 @@ public class CustomerServiceApplication {
 
 	@Bean
 	public HttpServiceProxyFactory httpServiceProxyFactory(
-			WebClient.Builder webClientBuilder, ConversionService conversionService) {
+			WebClient.Builder clientBuilder, ConversionService service) {
 
-		WebClient webClient = webClientBuilder.baseUrl(this.verificationServiceUrl).build();
+		WebClient webClient = clientBuilder.baseUrl(this.verificationServiceUrl).build();
 		HttpServiceProxyFactory proxyFactory = new HttpServiceProxyFactory(new WebClientAdapter(webClient));
-		proxyFactory.setConversionService(conversionService);
+		proxyFactory.setConversionService(service);
 		return proxyFactory;
 	}
 
